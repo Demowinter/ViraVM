@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <core/types.hpp>
 #include <core/callframe.hpp>
 #include <core/nptypes/value.hpp>
@@ -35,11 +35,11 @@ struct ExecutionContext {
     std::vector<VariableEntry> globalVarTable;
 
     // Runtime data | Mutable | index mutable
-    std::unordered_map<Index, ValueEntry> valueTable;
-    std::unordered_map<Index, ReferenceEntry> referenceTable;
-    std::unordered_map<Index, LambdaEntry> lambdaTable;
-    std::unordered_map<Index, ArrayEntry> arrayTable;
-    std::unordered_map<Index, StructEntry> structTable;
+    std::map<Index, ValueEntry> valueTable;
+    std::map<Index, ReferenceEntry> referenceTable;
+    std::map<Index, LambdaEntry> lambdaTable;
+    std::map<Index, ArrayEntry> arrayTable;
+    std::map<Index, StructEntry> structTable;
 
     std::vector<CallFrame> callStack;
     std::vector<Index> valueStack;

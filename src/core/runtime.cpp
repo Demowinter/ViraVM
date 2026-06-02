@@ -1,4 +1,5 @@
 #include <vector>
+#include <map>
 #include <set>
 #include <algorithm>
 #include <core/types.hpp>
@@ -395,7 +396,7 @@ ClearList generateClearList(ExecutionContext& context, Index valueIndex) {
 }
 
 void optimizeClearList(ExecutionContext& context, ClearList& clearList) {
-    std::unordered_map<Index, uint16> refCounters;
+    std::map<Index, uint16> refCounters;
 
     std::set<Index> flaggedRef;
     std::set<Index> deletedRef;
