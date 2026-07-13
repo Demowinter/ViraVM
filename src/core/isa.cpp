@@ -32,6 +32,9 @@ void loada(ExecutionContext& context) {
     Index valIndex = getArrayElementValue(context, arrayIndex, elemIndex);
 
     pushValue(context, valIndex);
+
+    checkClearTemporary(context, elemIndex);
+    checkClearTemporary(context, arrayIndex);
 }
 
 void loadm(ExecutionContext& context, Index memberIndex) {
@@ -40,6 +43,8 @@ void loadm(ExecutionContext& context, Index memberIndex) {
     Index valIndex = getStructMemberValue(context, structIndex, memberIndex);
 
     pushValue(context, valIndex);
+
+    checkClearTemporary(context, structIndex);
 }
 
 void storel(ExecutionContext& context, Index varIndex) {
@@ -47,6 +52,7 @@ void storel(ExecutionContext& context, Index varIndex) {
     Index destination = getLocalVariableValue(context, varIndex);
 
     storeValue(context, destination, source);
+
     checkClearTemporary(context, source);
 }
 
@@ -55,6 +61,7 @@ void storeg(ExecutionContext& context, Index varIndex) {
     Index destination = getGlobalVariableValue(context, varIndex);
 
     storeValue(context, destination, source);
+
     checkClearTemporary(context, source);
 }
 
@@ -66,7 +73,10 @@ void storea(ExecutionContext& context) {
     Index destination = getArrayElementValue(context, arrayIndex, elemIndex);
 
     storeValue(context, destination, source);
+
     checkClearTemporary(context, source);
+    checkClearTemporary(context, elemIndex);
+    checkClearTemporary(context, arrayIndex);
 }
 
 void storem(ExecutionContext& context, Index memberIndex) {
@@ -76,7 +86,9 @@ void storem(ExecutionContext& context, Index memberIndex) {
     Index destination = getStructMemberValue(context, structIndex, memberIndex);
 
     storeValue(context, destination, source);
+
     checkClearTemporary(context, source);
+    checkClearTemporary(context, structIndex);
 }
 
 void mkref(ExecutionContext& context) {
@@ -88,7 +100,7 @@ void mkref(ExecutionContext& context) {
 
 void initref(ExecutionContext& context) {
     Index refValIndex = popValue(context);
-    Index initValIndex = popValue(context);
+    Index initValIndex = popValue(context); // cannot be unbound, so checkClearTemporary not used
 
     initReference(context, initValIndex, refValIndex);
 
@@ -103,6 +115,7 @@ void jumpif(ExecutionContext& context, Index codePosition) {
     Index valueIndex = popValue(context);
 
     if (checkCondition(context, valueIndex)) setInstructionPointer(context, codePosition);
+
     checkClearTemporary(context, valueIndex);
 }
 
@@ -126,6 +139,8 @@ void calll(ExecutionContext& context, Size argCount) {
     Index valueIndex = popValue(context);
 
     callLambdaFunction(context, valueIndex, argCount);
+
+    checkClearTemporary(context, valueIndex);
 }
 
 void ret(ExecutionContext& context) {
