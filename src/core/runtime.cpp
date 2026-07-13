@@ -869,7 +869,13 @@ Index compareBuildable(ExecutionContext& context, Index valueIndex1, Index value
                 valEntryNew.value.value = true;
 
                 for (Index i = 0; i < arrayEntry1.valueArray.size(); i++) {
-                    if (!compareValues(context, arrayEntry1.valueArray[i], arrayEntry2.valueArray[i], compareOperator)) {
+                    Index checkIndex = compareValues(context, arrayEntry1.valueArray[i], arrayEntry2.valueArray[i], compareOperator);
+
+                    if (checkIndex == invalidIndex) return invalidIndex;
+
+                    ValueEntry& checkEntry = getValueEntry(context, checkIndex);
+
+                    if (!std::get<bool>(checkEntry.value.value)) {
                         valEntryNew.value.value = false;
 
                         break;
@@ -890,7 +896,13 @@ Index compareBuildable(ExecutionContext& context, Index valueIndex1, Index value
                 valEntryNew.value.value = true;
 
                 for (Index i = 0; i < structEntry1.memberTable.size(); i++) {
-                    if (!compareValues(context, structEntry1.memberTable[i], structEntry2.memberTable[i], compareOperator)) {
+                    Index checkIndex = compareValues(context, structEntry1.memberTable[i], structEntry2.memberTable[i], compareOperator);
+
+                    if (checkIndex == invalidIndex) return invalidIndex;
+
+                    ValueEntry& checkEntry = getValueEntry(context, checkIndex);
+
+                    if (!std::get<bool>(checkEntry.value.value)) {
                         valEntryNew.value.value = false;
 
                         break;
