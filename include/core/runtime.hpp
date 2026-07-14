@@ -32,7 +32,7 @@ using ClearList = std::vector<ClearEntry>;
 
 //-----------------------internal-----------------------
 Index getCallFrameIndex(ExecutionContext& context);
-Index getLastValueIndex(ExecutionContext& context);
+Index getStackAddress(ExecutionContext& context);
 
 MetaTypeEntry& getTypeMeta(ExecutionContext& context, Index typeIndex);
 MetaConstantEntry& getConstantMetaEntry(ExecutionContext& context, Index constIndex);
@@ -59,6 +59,14 @@ ArrayEntry& createArrayEntry(ExecutionContext& context, Index arrayIndex);
 
 StructEntry& getStructEntry(ExecutionContext& context, Index structIndex);
 StructEntry& createStructEntry(ExecutionContext& context, Index structIndex);
+
+bool checkLocalVariableEntry(ExecutionContext& context, Index varIndex);
+bool checkGlobalVariableEntry(ExecutionContext& context, Index varIndex);
+bool checkValueEntry(ExecutionContext& context, Index valueIndex);
+bool checkReferenceEntry(ExecutionContext& context, Index refIndex);
+bool checkLambdaEntry(ExecutionContext& context, Index lambdaIndex);
+bool checkArrayEntry(ExecutionContext& context, Index arrayIndex);
+bool checkStructEntry(ExecutionContext& context, Index structIndex);
 
 Index getFreeValueIndex(ExecutionContext& context);
 Index getFreeReferenceIndex(ExecutionContext& context);

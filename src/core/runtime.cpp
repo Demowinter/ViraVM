@@ -25,7 +25,7 @@ Index getCallFrameIndex(ExecutionContext& context) {
     return context.callStack.size() - 1;
 }
 
-Index getLastValueIndex(ExecutionContext& context) {
+Index getStackAddress(ExecutionContext& context) {
     return context.valueStack.size() - 1;
 }
 
@@ -106,6 +106,34 @@ StructEntry& getStructEntry(ExecutionContext& context, Index structIndex) {
 
 StructEntry& createStructEntry(ExecutionContext& context, Index structIndex) {
     return context.structTable[structIndex];
+}
+
+bool checkLocalVariableEntry(ExecutionContext& context, Index varIndex) {
+    return varIndex >= 0 && varIndex < getCallFrame(context).localVarTable.size();
+}
+
+bool checkGlobalVariableEntry(ExecutionContext& context, Index varIndex) {
+    return varIndex >= 0 && varIndex < context.globalVarTable.size();
+}
+
+bool checkValueEntry(ExecutionContext& context, Index valueIndex) {
+    return context.valueTable.find(valueIndex) != context.valueTable.end();
+}
+
+bool checkReferenceEntry(ExecutionContext& context, Index refIndex) {
+    return context.referenceTable.find(refIndex) != context.referenceTable.end();
+}
+
+bool checkLambdaEntry(ExecutionContext& context, Index lambdaIndex) {
+    return context.lambdaTable.find(lambdaIndex) != context.lambdaTable.end();
+}
+
+bool checkArrayEntry(ExecutionContext& context, Index arrayIndex) {
+    return context.arrayTable.find(arrayIndex) != context.arrayTable.end();
+}
+
+bool checkStructEntry(ExecutionContext& context, Index structIndex) {
+    return context.structTable.find(structIndex) != context.structTable.end();
 }
 
 Index getFreeValueIndex(ExecutionContext& context) {
@@ -473,9 +501,9 @@ void popCallFrame(ExecutionContext& context) {
 void clearCallFrame(ExecutionContext& context) {
     CallFrame& frame = getCallFrame(context);
     
-    for (VariableEntry& varEntry : frame.localVarTable) clearValue(context, varEntry.value);
+    while (getStackAddress(context) - frame.returnStackAddress) checkClearTemporary(context, popValue(context));
 
-    while (getLastValueIndex(context) - frame.returnStackAddress) checkClearTemporary(context, popValue(context));
+    for (VariableEntry& varEntry : frame.localVarTable) clearValue(context, varEntry.value);
 }
 
 //-----------------------internal-----------------------
@@ -573,7 +601,7 @@ Index makeReference(ExecutionContext& context, Index valueIndex) {
         ReferenceEntry& refEntry = createReferenceEntry(context, valEntry.refIndex);
         refEntry.alive = true;
         refEntry.count++;
-        refEntry.typeMeta = valEntry.value.type;
+        refEntry.trueTypeMeta = valEntry.value.type;
         refEntry.value = valueIndex;
     }
 
@@ -740,6 +768,7 @@ void clearValue(ExecutionContext& context, Index valueIndex) {
 
 void checkClearTemporary(ExecutionContext& context, Index valueIndex) {
     if (checkException(context)) return;
+    if (!checkValueEntry(context, valueIndex)) return;
 
     ValueEntry& valueEntry = getValueEntry(context, valueIndex);
 
@@ -925,7 +954,7 @@ void callFunction(ExecutionContext& context, Index functionIndex, Size argCount)
     CallFrame& frame = pushCallFrame(context);
     frame.functionMeta = functionIndex;
     frame.returnAddress = getInstructionPointer(context);
-    frame.returnStackAddress = getLastValueIndex(context) - argCount;
+    frame.returnStackAddress = getStackAddress(context) - argCount;
 
     setInstructionPointer(context, funcMetaEntry.codeStart);
 
@@ -944,7 +973,7 @@ void callLambdaFunction(ExecutionContext& context, Index valueIndex, Size argCou
     CallFrame& frame = pushCallFrame(context);
     frame.functionMeta = lambdaEntry.functionMeta;
     frame.returnAddress = getInstructionPointer(context);
-    frame.returnStackAddress = getLastValueIndex(context) - argCount - lambdaEntry.capturedValues.size();
+    frame.returnStackAddress = getStackAddress(context) - argCount - lambdaEntry.capturedValues.size();
 
     setInstructionPointer(context, funcMetaEntry.codeStart);
 
