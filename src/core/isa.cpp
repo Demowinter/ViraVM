@@ -92,7 +92,7 @@ void storem(ExecutionContext& context, Index memberIndex) {
 }
 
 void mkref(ExecutionContext& context) {
-    Index valueIndex = popValue(context);
+    Index valueIndex = popValue(context); // cannot be unbound, so checkClearTemporary not used
     Index valueIndexNew = makeReference(context, valueIndex);
     
     pushValue(context, valueIndexNew);
@@ -156,11 +156,13 @@ void retv(ExecutionContext& context) {
 }
 
 void debug_print_stack(ExecutionContext& context) {
-    Index index = popValue(context);
+    Index valueIndex = popValue(context);
 
-    ValueEntry& valEntry = getValueEntry(context, index);
+    ValueEntry& valEntry = getValueEntry(context, valueIndex);
 
     std::visit([](auto&& value) -> void {
         std::cout << value << "\t(" << abi::__cxa_demangle(typeid(value).name(), nullptr, nullptr, nullptr) << ")" << std::endl;
     }, valEntry.value.value);
+
+    checkClearTemporary(context, valueIndex);
 }
