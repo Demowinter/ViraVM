@@ -1,8 +1,8 @@
-# Victim
+# ViraVM
 
 > Experiment in building a programming-language runtime from scratch.
 
-Victim is an experimental **language-independent runtime and virtual machine written in C++**.
+ViraVM is an experimental **language-independent runtime and virtual machine written in C++**.
 
 The idea is to provide a common execution environment that programming languages can target instead of implementing their own runtime from scratch.
 
@@ -16,7 +16,7 @@ The project is primarily focused on exploring how a programming-language runtime
 
 ## 💡 The idea
 
-Victim is built around a **table-based runtime**.
+ViraVM is built around a **table-based runtime**.
 
 Runtime entities such as values, types, variables, functions, arrays and structures are stored in dedicated tables and referenced through indices.
 
@@ -31,11 +31,11 @@ In simplified form:
                    Compiler
                       │
                       ▼
-              Victim Bytecode
+              ViraVM Bytecode
                       │
                       ▼
              ┌─────────────────┐
-             │ Victim Runtime  │
+             │ ViraVM Runtime  │
              │                 │
              │ Runtime Tables  │
              │       +         │
@@ -46,7 +46,7 @@ In simplified form:
                   Execution
 ```
 
-The goal is for a language to only need to translate its own concepts into Victim's runtime model and bytecode.
+The goal is for a language to only need to translate its own concepts into ViraVM's runtime model and bytecode.
 
 ---
 
@@ -75,14 +75,14 @@ The runtime can currently be exercised directly from C++ while the surrounding t
 
 ## 🚧 What is missing
 
-Victim is **not yet a complete standalone runtime**.
+ViraVM is **not yet a complete standalone runtime**.
 
 The main unfinished parts are:
 
 * complete bytecode instruction loading;
 * executing programs loaded directly from bytecode files;
 * complete exception unwinding;
-* a compiler/code generator targeting Victim;
+* a compiler/code generator targeting ViraVM;
 * stabilization of the bytecode format and ISA;
 * a proper user-facing runtime/toolchain.
 
@@ -92,7 +92,7 @@ These are part of the ongoing development of the project.
 
 ## 🏗️ Current architecture
 
-At the moment, Victim can be viewed as three major parts:
+At the moment, ViraVM can be viewed as three major parts:
 
 ```text
 ┌──────────────────────┐
@@ -124,7 +124,7 @@ The tables form the persistent runtime state, while the VM provides the mechanis
 
 ## 🧪 Current development stage
 
-Victim is currently in the **runtime development stage**.
+ViraVM is currently in the **runtime development stage**.
 
 The VM and its runtime model are being built before a complete compiler and standalone bytecode toolchain.
 
@@ -139,10 +139,10 @@ Source Code
 Compiler
      │
      ▼
-Victim Bytecode
+ViraVM Bytecode
      │
      ▼
-Victim Runtime
+ViraVM Runtime
      │
      ▼
 Program Execution
@@ -152,7 +152,7 @@ Program Execution
 
 ## 🎯 Goals
 
-Victim aims to become a reusable runtime for programming languages that target its bytecode.
+ViraVM aims to become a reusable runtime for programming languages that target its bytecode.
 
 The project focuses on:
 
@@ -163,17 +163,17 @@ The project focuses on:
 * an extensible bytecode format;
 * experimentation with programming-language runtime design.
 
-Victim is not intended to be tied to one specific programming language.
+ViraVM is not intended to be tied to one specific programming language.
 
 ---
 
 ## 🔨 Building
 
-Victim uses CMake.
+ViraVM uses CMake.
 
 ```bash
-git clone https://github.com/Demowinter/victim.git
-cd victim
+git clone https://github.com/Demowinter/viravm.git
+cd viravm
 
 cmake -S . -B build
 cmake --build build
@@ -182,7 +182,7 @@ cmake --build build
 The current development executable is:
 
 ```bash
-./build/victim-devel
+./build/viravm-devel
 ```
 
 At this stage it is primarily used for testing the runtime and VM rather than running arbitrary compiled programs.
