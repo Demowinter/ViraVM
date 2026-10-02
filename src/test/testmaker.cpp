@@ -113,7 +113,7 @@ void TestMaker::addStructureMember(std::string name, Index type) {
 }
 
 void TestMaker::init() {
-    addFunction("victimEntryPoint", 0, ilist.size(), 0);
+    addFunction("viraEntryPoint", 0, ilist.size(), 0);
 
     // TODO: remove once CALL instruction exists
     context.callStack.push_back({});
