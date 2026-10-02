@@ -5,7 +5,7 @@
 constexpr uint8 vmVersionMajor = 0;
 constexpr uint8 vmVersionMinor = 1;
 
-inline const std::string vmVersionString = "Victim";
+inline const std::string vmNameString = "ViraVM";
 
 constexpr uint32 bytecodeMagic = 0xF0BD38AA;
 constexpr uint8 bytecodeVersionMajor = 0;
